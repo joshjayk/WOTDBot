@@ -1,4 +1,6 @@
 import random
+import praw
+from datetime import date
 
 """
 Basically I need to log onto reddit with a bot and constantly be looking for the
@@ -51,19 +53,31 @@ def findDoubles():
 # It will add the word to previouswords.txt.
 # Continues until all words have been used up.
 
-def wotd():
+def wotdFinder():
 	with open('combinedlist.txt', 'r') as words:
 		with open('previouswords.txt', 'r+') as hist:
 			wordlist = words.readlines()
 			histlist = hist.readlines()
-			while len(wordlist) > 0:
-				wotd = wordlist.pop(random.randrange(len(wordlist)))
-				if wotd not in histlist:
-					hist.write(wotd)
-					histlist.append(wotd)
-					
+			wotd = wordlist.pop(random.randrange(len(wordlist)))
+			while wotd in histlist:
+				if len(wordlist) > 0:
+					wotd = wordlist.pop(random.randrange(len(wordlist)))
+				else:
+					return None
+			hist.write("%s: %s" % (date.today().strftime("%b %d %Y"), wotd))
+			histlist.append(wotd)
+			return wotd
+			
 def main():
-	wotd()
+		currentDay = date.today()
+		word = wotdFinder()
+		while True:
+			if date.today() > currentDay:
+				print("Previous day: %s, Previous word: %s" % (currentDay.strftime("%b %d %Y"), wotd))
+				currentDay = date.today()
+				word = wotdFinder()
+				print("Current day: %s, Current word: %s" % (currentDay.strftime("%b %d %Y"), wotd))
+		
 	
 if __name__ == "__main__":
 	main()
