@@ -1,5 +1,15 @@
 import random
 
+"""
+Basically I need to log onto reddit with a bot and constantly be looking for the
+word of the day in all submitted comments (if possible). Once someone uses the word,
+reply to them with "blah blah blah" and then basically we can just have it sleep
+until the next day.
+"""
+
+# This method is only for comparing the reference list with the created list.
+# I wanted to make sure that there weren't any words missing/extras added.
+
 def compareLists():
 	wotd = open('previouswords.txt', 'r')
 	base = open('combinedlist.txt', 'r')
@@ -19,6 +29,9 @@ def compareLists():
 		basecounter += 1
 	print(counter)
 	
+# A method to look through the created list and search for any doubles.
+# Outputs to doubleCounter.txt.
+
 def findDoubles():
 	with open('previouswords.txt', 'r') as input:
 		doubleCounter = {}
@@ -33,6 +46,11 @@ def findDoubles():
 					output.write("%20s: %d\n" % (key, value))
 		output.close()
 		
+# Using the list of reference words, this picks a random word from the list.
+# If the word picked has not been picked before (is not in previouswords.txt),
+# It will add the word to previouswords.txt.
+# Continues until all words have been used up.
+
 def wotd():
 	with open('combinedlist.txt', 'r') as words:
 		with open('previouswords.txt', 'r+') as hist:
